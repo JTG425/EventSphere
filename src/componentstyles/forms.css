@@ -1,0 +1,33 @@
+.sign-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.sign-form form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.sign-form form input {
+    width: 75%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+}
+
+.sign-form form button {
+    width: 75%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--primary);
+    color: var(--primary-content);
+    cursor: pointer;
+
+}

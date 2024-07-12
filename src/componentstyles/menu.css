@@ -1,0 +1,23 @@
+.menu-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: fit-content;
+    height: fit-content;
+    z-index: 5;
+}
+
+.menu-option {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.375rem;
+    width: 100px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border);
+    background: var(--primary);
+    color: var(--primary-content);
+    cursor: pointer;
+}
