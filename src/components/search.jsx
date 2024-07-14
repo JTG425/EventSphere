@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import '../pagestyles/home.css';
 
-function Home(props) {
+function SearchBar(props) {
     const userData = props.userData;
 
 
@@ -16,4 +16,4 @@ function Home(props) {
   );
 }
 
-export default Home;
+export default SearchBar;

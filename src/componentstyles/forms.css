@@ -1,4 +1,5 @@
 .sign-form {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -15,13 +16,13 @@
 }
 
 .sign-form form input {
-    width: 75%;
+    width: 80%;
     padding: 10px;
     border: 1px solid var(--border);
     border-radius: var(--border-radius);
 }
 
-.sign-form form button {
+.submit-button {
     width: 75%;
     padding: 10px;
     border: 1px solid var(--border);
@@ -29,5 +30,23 @@
     background: var(--primary);
     color: var(--primary-content);
     cursor: pointer;
+}
 
+.show-password {
+    position: absolute;
+    right: 8%;
+    width: fit-content;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.show-password-signup {
+    position: absolute;
+    top: 28%;
+    right: 8%;
+    width: fit-content;
+    background: none;
+    border: none;
+    cursor: pointer;
 }

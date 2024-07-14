@@ -2,11 +2,26 @@
 import React, { useState } from 'react';
 import { signIn } from '../services/cognito';
 import '../componentstyles/forms.css';
+import { IoEyeOffOutline } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
+
+
+
+function handleShowPassword() {
+  var x = document.getElementById("password");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
 
 const SignIn = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const { setIsAuthenticated } = props;
 
   const handleSignIn = async (event) => {
@@ -14,7 +29,8 @@ const SignIn = (props) => {
     try {
       await signIn(username, password);
       setMessage('Sign in successful!');
-        setIsAuthenticated(true);
+        setIsAuthenticated({ username });
+        setError(null);
     } catch (error) {
       setMessage(`Sign in failed: ${error.message}`);
     }
@@ -32,10 +48,22 @@ const SignIn = (props) => {
         <input
           type="password"
           value={password}
+          id='password'
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
-        <button type="submit">Sign In</button>
+        <button
+          className='show-password'
+          type="button"
+          onClick={() => {
+            setShowPassword(!showPassword)
+            handleShowPassword()
+          }}
+        >
+          {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+        </button>
+
+        <button className='submit-button' type="submit">Sign In</button>
       </form>
       <p>{message}</p>
     </div>

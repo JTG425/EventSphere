@@ -11,10 +11,6 @@
     overflow-y: scroll;
     overscroll-behavior: contain;
     padding: 0;
-    background: var(--foreground);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    padding-top: 25px;
 }
 
 .events-container {
