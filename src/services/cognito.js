@@ -4,14 +4,12 @@ import {
   AuthenticationDetails,
 } from 'amazon-cognito-identity-js';
 
-var poolData = {
+const poolData = {
   UserPoolId: 'us-east-1_UEKgc3xWn',
   ClientId: '7apecnshtv84m3u1us0p8kklt4',
 };
 
-var userPool = new CognitoUserPool(poolData);
-
-
+const userPool = new CognitoUserPool(poolData);
 
 export const signUp = (username, password, attributeList) => {
   return new Promise((resolve, reject) => {
@@ -26,12 +24,12 @@ export const signUp = (username, password, attributeList) => {
 };
 
 export const confirmSignUp = (username, code) => {
-  const userData = {
+  const cognitoUserData = {
     Username: username,
     Pool: userPool,
   };
 
-  const cognitoUser = new CognitoUser(userData);
+  const cognitoUser = new CognitoUser(cognitoUserData);
 
   return new Promise((resolve, reject) => {
     cognitoUser.confirmRegistration(code, true, (err, result) => {
@@ -50,12 +48,12 @@ export const signIn = (username, password) => {
     Password: password,
   });
 
-  const userData = {
+  const cognitoUserData = {
     Username: username,
     Pool: userPool,
   };
 
-  const cognitoUser = new CognitoUser(userData);
+  const cognitoUser = new CognitoUser(cognitoUserData);
 
   return new Promise((resolve, reject) => {
     cognitoUser.authenticateUser(authenticationDetails, {
@@ -80,4 +78,14 @@ export const signOut = () => {
 
 export const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem('cognitoUser'));
+};
+
+// Ensure no record of the user's data and information is left in local storage once signed out
+export const clearLocalStorage = () => {
+  localStorage.clear();
+};
+
+export const signOutAndClearStorage = () => {
+  signOut();
+  clearLocalStorage();
 };

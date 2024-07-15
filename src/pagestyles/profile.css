@@ -17,7 +17,24 @@
     cursor: pointer;
 }
 
+.pfp-overlay {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--foreground);
+    cursor: pointer;
+}
+
+
 .profile-info {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

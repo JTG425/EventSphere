@@ -1,0 +1,82 @@
+.create-account-container {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100vw;
+    height: 100vh;
+    padding: 1rem;
+    background: rgba(0,0,0,0.25);
+    z-index: 10;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.create-account-background {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--copy);
+    gap: 1rem;
+    width: 80%;
+    height: fit-content;
+    padding: 1rem;
+    background: var(--foreground);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+}
+
+.create-account {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    height: fit-content;
+    padding: 1rem;
+
+}
+
+.create-account h1 {
+    margin: 0;
+}
+
+.create-account p {
+    margin: 0;
+}
+
+.create-account form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.create-account form input {
+    padding: 10px;
+    width: 50%;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border);
+}
+
+.create-account form button {
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: var(--primary);
+    color: var(--primary-content);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--box-shadow);
+}

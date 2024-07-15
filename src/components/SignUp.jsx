@@ -5,6 +5,7 @@ import '../componentstyles/forms.css';
 import {motion} from 'framer-motion';
 import { IoEyeOffOutline } from "react-icons/io5";
 import { IoEyeOutline } from "react-icons/io5";
+import { postSignUp } from '../services/dataService';
 
 function handleShowPassword() {
   var x = document.getElementById("password");
@@ -15,35 +16,9 @@ function handleShowPassword() {
   }
 }
 
-const postSignUp = async (username, email) => {
-  const url = 'http://127.0.0.1:8000/eventsphere/create-user/';
-  const data = {
-      username: username,
-      email: email,
-  };
-
-  try {
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-    }
-
-    const jsonResponse = await response.json();
-    console.log(jsonResponse);
-} catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-}
-};
 
 
-const SignUp = () => {
+const SignUp = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -51,6 +26,7 @@ const SignUp = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [isVerificationStep, setIsVerificationStep] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const {setIsAuthenticated} = props;
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -76,6 +52,7 @@ const SignUp = () => {
       setMessage('Verification successful! You can now sign in.');
       postSignUp(username, email);
       setIsVerificationStep(false);
+      setIsAuthenticated({username});
     } catch (error) {
       setMessage(`Verification failed: ${error.message}`);
     }

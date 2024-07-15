@@ -4,39 +4,14 @@ import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import { signOut, getCurrentUser } from "./services/cognito";
 import { motion, AnimatePresence } from "framer-motion";
+import { fetchData } from "./services/dataService";
+import { postEditUser } from "./services/dataService";
 import defaultPFP from "./assets/defaultProfile.png";
 import MenuOptions from "./components/menuOptions";
 import Home from "./pages/home";
 import Profile from "./pages/profile";
+import CreateAccount from "./components/createAccount";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
-async function fetchData(username, sessionToken) {
-  const url = "http://127.0.0.1:8000/eventsphere/retrieve-data/";
-  const data = {
-    username: username,
-    sessionToken: sessionToken,
-  };
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok " + response.statusText);
-    }
-
-    const jsonResponse = await response.json();
-    console.log(JSON.parse(jsonResponse));
-    return JSON.parse(jsonResponse);
-  } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
-  }
-}
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,6 +20,7 @@ function App() {
   const [userData, setUserData] = useState(null);
   const [userDataLoading, setUserDataLoading] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
+  const [createAccount, setCreateAccount] = useState(false);
   const [page, setPage] = useState("home");
 
   useEffect(() => {
@@ -54,18 +30,25 @@ function App() {
       setIsAuthenticated(true);
       fetchData(user.username, user.sessionToken).then((data) => {
         if (data) {
+          console.log("Fetched Data:", data);
           setUserData(data);
+          if(data.newUser === "true") {
+            setCreateAccount(true);
+          }
+          if(data.newUser === "false") {
+            setCreateAccount(false);
+          }
+          console.log(data);
         }
         setUserDataLoading(false);
       });
-    } else {
-      setUserDataLoading(false);
     }
   }, []);
 
   const handleSignOut = () => {
     signOut();
     setIsAuthenticated(false);
+    setUserData(null);
     setCognitoUser(null);
   };
 
@@ -73,17 +56,30 @@ function App() {
     setIsAuthenticated(true);
     setCognitoUser(user);
     setPage("home");
-    setUserDataLoading(true); // Set loading state to true when signing in
+    setUserDataLoading(true);
     fetchData(user.username, user.sessionToken).then((data) => {
       if (data) {
         setUserData(data);
+        if(data.newUser === "true") {
+          setCreateAccount(data.newUser);
+        }
       }
       setUserDataLoading(false);
     });
   };
 
+
   const handlePageChange = (page) => {
     setPage(page);
+  };
+
+  const handleAccountCreated = (data) => {
+    setUserData(data);
+    console.log(data);
+    setCreateAccount(false);
+    postEditUser(data).then((response) => {
+      console.log(response);
+    });
   };
 
   const menuVariants = {
@@ -102,7 +98,6 @@ function App() {
       },
     },
   };
-
   return (
     <BrowserRouter>
       <div className="App">
@@ -123,6 +118,7 @@ function App() {
                       setPage={handlePageChange}
                     />
                   </motion.div>
+                  {createAccount ? <CreateAccount userData={userData} setDone={handleAccountCreated} /> : null}
                   <motion.div
                     key="home-page"
                     className="page-container"
@@ -192,7 +188,7 @@ function App() {
                     </motion.button>
                   </div>
                   {signInOrUp === "signUp" ? (
-                    <SignUp />
+                    <SignUp setIsAuthenticated={handleSignIn} />
                   ) : (
                     <SignIn setIsAuthenticated={handleSignIn} />
                   )}

@@ -1,0 +1,21 @@
+{
+  "newUser": "false",
+  "username": "jtg425",
+  "email": "jtgolonka@outlook.com",
+  "profilepic": "",
+  "name": "Joshua Golonka",
+  "invitedEvents": [
+    {
+      "id": "1",
+      "name": "Maria's Birthday",
+      "date": "07/26/2024",
+      "time": "7:00PM",
+      "attendees": {
+        "KayMarr": "Can't Wait!",
+        "testing": "WOOO!!"
+      }
+    }
+  ],
+  "createdEvents": [],
+  "friends": []
+}
