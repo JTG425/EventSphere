@@ -1,0 +1,28 @@
+.events-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    height: fit-content;
+}
+
+
+.events-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    width: 80%;
+    max-width: 800px;
+    height: fit-content;
+    padding: 1rem;
+    background: var(--foreground);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+
+

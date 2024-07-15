@@ -1,13 +1,17 @@
+import AWS from 'aws-sdk';
 import {
   CognitoUserPool,
   CognitoUser,
   AuthenticationDetails,
 } from 'amazon-cognito-identity-js';
 
+AWS.config.region = 'us-east-1';
+
 const poolData = {
   UserPoolId: 'us-east-1_UEKgc3xWn',
   ClientId: '7apecnshtv84m3u1us0p8kklt4',
 };
+
 
 const userPool = new CognitoUserPool(poolData);
 
@@ -80,7 +84,6 @@ export const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem('cognitoUser'));
 };
 
-// Ensure no record of the user's data and information is left in local storage once signed out
 export const clearLocalStorage = () => {
   localStorage.clear();
 };
@@ -88,4 +91,12 @@ export const clearLocalStorage = () => {
 export const signOutAndClearStorage = () => {
   signOut();
   clearLocalStorage();
+};
+
+export const getIdentityId = async () => {
+  const user = getCurrentUser();
+  if (!user) {
+      throw new Error('No authenticated user found');
+  }
+  return user.username;
 };

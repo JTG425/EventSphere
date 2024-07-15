@@ -1,7 +1,10 @@
+import { getIdentityId } from "./cognito";
+
 export const fetchData = async (username, sessionToken) => {
     const url = "http://127.0.0.1:8000/eventsphere/retrieve-data/";
+    const userId = await getIdentityId();
     const data = {
-        username: username,
+        username: userId,
         sessionToken: sessionToken,
     };
   
@@ -30,8 +33,9 @@ export const fetchData = async (username, sessionToken) => {
   
   export const postSignUp = async (username, email) => {
       const url = 'http://127.0.0.1:8000/eventsphere/create-user/';
+      const userId = await getIdentityId();
       const data = {
-          username: username,
+          username: userId,
           email: email,
       };
     
@@ -59,7 +63,7 @@ export const fetchData = async (username, sessionToken) => {
   
   export const postEditUser = async (data) => {
       const url = 'http://127.0.0.1:8000/eventsphere/edit-user/';
-    
+      data.username = await getIdentityId();
       try {
         const response = await fetch(url, {
             method: 'POST',

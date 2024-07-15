@@ -1,0 +1,76 @@
+.create-event-container {
+  position: fixed;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.create-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 80%;
+  max-width: 800px;
+  height: fit-content;
+  padding: 1rem;
+  background: var(--foreground);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.create-form-container form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.create-form-container form input {
+  width: 90%;
+  height: fit-content;
+  padding: 0.5rem;
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--background);
+  color: var(--copy);
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--border);
+}
+
+.create-form-container form textarea {
+    width: 90%;
+    height: 10rem;
+    padding: 0.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--background);
+    color: var(--copy);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border);
+    resize: none;
+    
+}
+
+.create-form-container form button {
+  width: 95%;
+  height: fit-content;
+  padding: 0.5rem;
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--primary-light);
+  color: var(--copy);
+  font-weight: bold;
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--border);
+  cursor: pointer;
+}

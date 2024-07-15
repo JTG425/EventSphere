@@ -12,6 +12,7 @@ import Home from "./pages/home";
 import Profile from "./pages/profile";
 import CreateAccount from "./components/createAccount";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { DotLoader } from "react-spinners";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -31,14 +32,14 @@ function App() {
       fetchData(user.username, user.sessionToken).then((data) => {
         if (data) {
           console.log("Fetched Data:", data);
-          setUserData(data);
-          if(data.newUser === "true") {
+          setUserData(data.userData);
+          if(data.userData.newUser === "true") {
             setCreateAccount(true);
           }
-          if(data.newUser === "false") {
+          if(data.userData.newUser === "false") {
             setCreateAccount(false);
           }
-          console.log(data);
+          console.log(data.userData);
         }
         setUserDataLoading(false);
       });
@@ -57,15 +58,24 @@ function App() {
     setCognitoUser(user);
     setPage("home");
     setUserDataLoading(true);
-    fetchData(user.username, user.sessionToken).then((data) => {
-      if (data) {
-        setUserData(data);
-        if(data.newUser === "true") {
-          setCreateAccount(data.newUser);
+    if (user) {
+      setCognitoUser(user);
+      setIsAuthenticated(true);
+      fetchData(user.username, user.sessionToken).then((data) => {
+        if (data) {
+          console.log("Fetched Data:", data);
+          setUserData(data.userData);
+          if(data.userData.newUser === "true") {
+            setCreateAccount(true);
+          }
+          if(data.userData.newUser === "false") {
+            setCreateAccount(false);
+          }
+          console.log(data.userData);
         }
-      }
-      setUserDataLoading(false);
-    });
+        setUserDataLoading(false);
+      });
+    }
   };
 
 
@@ -144,7 +154,7 @@ function App() {
                   </motion.div>
                 </>
               ) : (
-                <h1>Loading...</h1>
+                <DotLoader color={"#00b4d8"} loading={true} size={50} />
               )}
             </>
           ) : (
