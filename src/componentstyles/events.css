@@ -24,5 +24,232 @@
     box-shadow: var(--box-shadow);
 }
 
+.events-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    flex-wrap: wrap;
+
+}
+
+.event-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    height: fit-content;
+
+}
+
+.event {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    width: 125px;
+    height: 100%;
+    padding: 1rem;
+    background: var(--foreground);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    cursor: pointer;
+    text-align: center;
+    text-justify: inter-word;
+    min-height: 250px;
+    
+}
+
+.event img {
+    width: 50px;
+    height: 50px;
+}
+
+.event h3 {
+    margin: 0;
+    font-size: 12px;
+}
+.event p {
+    margin: 0;
+    font-size: 12px;
+}
+
+.edit-delete-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    height: fit-content;
+    padding: 1rem;
+}
+
+.edit-event-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: none;
+    background: var(--primary);
+    color: var(--primary-content);
+    cursor: pointer;
+    width: 25%;
+    font-size: 32px;
+}
+
+.epanded-event-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+}
+
+.expanded-event {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 70vw;
+    max-width: 500px;
+    height: 70vh;
+    max-height: 500px;
+    z-index: 11;
+    background: var(--foreground);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1rem;
+
+}
+
+.expanded-event img {
+    width: 100px;
+    height: auto;
+    border-radius: var(--border-radius);
+}
+
+
+.delete-popup {
+    position: fixed;
+    top: 10px;
+    left: 25%;
+    right: 25%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background: var(--foreground);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    box-shadow: var(--box-shadow);
+    text-align: center;
+}
+
+.delete-popup p {
+    margin: 0;
+
+}
+
+.delete-event-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: none;
+    background: var(--error);
+    color: var(--error-content);
+    cursor: pointer;
+    width: 25%;
+    font-size: 32px;
+}
+
+.confirm-delete-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    height: fit-content;
+    padding: 1rem;
+
+}
+
+.confirm-delete-button-yes {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: none;
+    background: var(--primary);
+    color: var(--primary-content);
+    cursor: pointer;
+    width: 25%;
+    font-size: 18px;
+}
+
+.confirm-delete-button-no {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: none;
+    background: var(--error);
+    color: var(--error-content);
+    cursor: pointer;
+    width: 25%;
+    font-size: 18px;
+}
+
+.close-event-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    border: none;
+    color: var(--copy);
+    background: none;
+    cursor: pointer;
+    font-size: 40px;
+
+
+}
+
 
 

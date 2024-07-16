@@ -17,9 +17,9 @@
 
 .sign-form form input {
     width: 80%;
-    padding: 10px;
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius);
+    /* padding: 10px; */
+    /* border: 1px solid var(--border);
+    border-radius: var(--border-radius); */
 }
 
 .submit-button {

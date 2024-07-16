@@ -1,0 +1,48 @@
+.friend-profile-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.friend-profile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 70vw;
+    max-width: 500px;
+    height: 35vh;
+    max-height: 500px;
+    z-index: 11;
+    background: var(--foreground);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1rem;
+}
+
+
+.friend-profile img {
+    width: 100px;
+    height: auto;
+    border-radius: var(--border-radius);
+}
+
+.add-friend-button {
+    padding: 10px;
+    border-radius: var(--border-radius);
+    border: none;
+    background: var(--primary);
+    color: var(--primary-content);
+    cursor: pointer;
+}

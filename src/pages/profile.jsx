@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "../pagestyles/profile.css";
 import { MdEdit } from "react-icons/md";
+import defaultPFP from "../assets/defaultProfile.png";
 
 
 function Profile(props) {
@@ -14,7 +15,7 @@ function Profile(props) {
       <div className="profile-container">
         <motion.div className="profile-info">
         <motion.img
-          src={userData.profilepic}
+          src={userData.profilepic || defaultPFP}
           alt="Profile Picture"
           className="edit-pfp"
           whileHover={{ scale: 1.02 }}

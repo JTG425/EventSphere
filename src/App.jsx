@@ -4,11 +4,16 @@ import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import { signOut, getCurrentUser } from "./services/cognito";
 import { motion, AnimatePresence } from "framer-motion";
+
 import { fetchData } from "./services/dataService";
+import { fetchUserList } from "./services/dataService";
 import { postEditUser } from "./services/dataService";
+import { postNewEvent } from "./services/dataService";
+
 import defaultPFP from "./assets/defaultProfile.png";
 import MenuOptions from "./components/menuOptions";
 import Home from "./pages/home";
+import SearchBar from "./components/search";
 import Profile from "./pages/profile";
 import CreateAccount from "./components/createAccount";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -20,14 +25,27 @@ function App() {
   const [cognitoUser, setCognitoUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [userDataLoading, setUserDataLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [createAccount, setCreateAccount] = useState(false);
   const [page, setPage] = useState("home");
+  const [userList, setUserList] = useState(null);
 
-  useEffect(() => {
-    const user = getCurrentUser();
+
+
+  const handleSignOut = () => {
+    signOut();
+    setIsAuthenticated(false);
+    setUserData(null);
+    setCognitoUser(null);
+  };
+
+  const handleSignIn = (user) => {
+    setCognitoUser(user);
+    setPage("home");
     if (user) {
       setCognitoUser(user);
+      setUserDataLoading(true);
       setIsAuthenticated(true);
       fetchData(user.username, user.sessionToken).then((data) => {
         if (data) {
@@ -43,25 +61,20 @@ function App() {
         }
         setUserDataLoading(false);
       });
+      fetchUserList(user.username, user.sessionToken).then((data) => {
+        setUserList(data);
+        console.log(userList);
+      });
     }
-  }, []);
-
-  const handleSignOut = () => {
-    signOut();
-    setIsAuthenticated(false);
-    setUserData(null);
-    setCognitoUser(null);
   };
 
-  const handleSignIn = (user) => {
-    setIsAuthenticated(true);
+  const handleSignUp = (user) => {
     setCognitoUser(user);
     setPage("home");
-    setUserDataLoading(true);
     if (user) {
       setCognitoUser(user);
-      setIsAuthenticated(true);
-      fetchData(user.username, user.sessionToken).then((data) => {
+      setUserDataLoading(true);
+      fetchData(user.username).then((data) => {
         if (data) {
           console.log("Fetched Data:", data);
           setUserData(data.userData);
@@ -74,6 +87,10 @@ function App() {
           console.log(data.userData);
         }
         setUserDataLoading(false);
+        setIsAuthenticated(true);
+      });
+      fetchUserList(user.username, user.sessionToken).then((data) => {
+        setUserList(data);
       });
     }
   };
@@ -85,22 +102,22 @@ function App() {
 
   const handleAccountCreated = (data) => {
     setUserData(data);
-    console.log(data);
-    setCreateAccount(false);
     postEditUser(data).then((response) => {
-      console.log(response);
+      setCreateAccount(false);
     });
   };
 
   const menuVariants = {
     show: {
       opacity: 1,
+      y: 0,
       display: "flex",
       transition: {
         duration: 0.5,
       },
     },
     hide: {
+      y: -100,
       opacity: 0,
       display: "none",
       transition: {
@@ -108,6 +125,42 @@ function App() {
       },
     },
   };
+
+  const handleToggleMenu = () => {
+    setShowMenu(!showMenu);
+  }
+
+  const handlePosting = (data, command) => {
+    switch (command) {
+      case "create-event":
+        postNewEvent(data).then((response) => {
+          console.log(response);
+          refreshUserData();
+        });
+        break;
+      case "edit-user":
+        postEditUser(data);
+        break;
+      default:
+        console.log("No command given");
+      break
+    }
+  };
+
+  const refreshUserData = () => {
+    setRefreshing(true);
+    fetchData(cognitoUser.username, cognitoUser.sessionToken).then((data) => {
+      if (data) {
+        setUserData(data.userData);
+        // setRefreshing(false);
+      }
+    });
+  }
+
+  useEffect(() => {
+    console.log(userList);
+  }, [userList]);
+
   return (
     <BrowserRouter>
       <div className="App">
@@ -124,6 +177,7 @@ function App() {
                     variants={menuVariants}
                   >
                     <MenuOptions
+                      showMenu={handleToggleMenu}
                       signOut={handleSignOut}
                       setPage={handlePageChange}
                     />
@@ -137,18 +191,19 @@ function App() {
                     exit={{ opacity: 0 }}
                   >
                     <span className="page-header">
+                      <SearchBar userList={userList} />
                       <motion.img
-                        src={userData.profilepic || defaultPFP}
+                        src={userData.profilepic === "" || userData === null ? defaultPFP : userData.profilepic}
                         alt="profile"
                         className="profile-picture"
-                        onClick={() => setShowMenu(!showMenu)}
+                        onClick={() => handleToggleMenu()}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       />
                     </span>
                     <Routes>
-                      <Route path="/" element={<Home userData={userData} />} />
-                      <Route path="/profile" element={<Profile userData={userData} />} />
+                      <Route path="/" element={<Home userData={userData} setData={handlePosting} />} />
+                      <Route path="/profile" element={<Profile userData={userData} setData={handlePosting} />} />
                       <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                   </motion.div>
@@ -198,7 +253,7 @@ function App() {
                     </motion.button>
                   </div>
                   {signInOrUp === "signUp" ? (
-                    <SignUp setIsAuthenticated={handleSignIn} />
+                    <SignUp setIsAuthenticated={handleSignUp} />
                   ) : (
                     <SignIn setIsAuthenticated={handleSignIn} />
                   )}

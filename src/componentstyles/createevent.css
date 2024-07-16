@@ -9,6 +9,7 @@
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
+  z-index: 10;
 }
 
 .create-form-container {
@@ -41,10 +42,10 @@
   padding: 0.5rem;
   border: none;
   border-radius: var(--border-radius);
-  background: var(--background);
+  background: var(--foreground);
   color: var(--copy);
   box-shadow: var(--box-shadow);
-  border: 1px solid var(--border);
+  border: none;
 }
 
 .create-form-container form textarea {
@@ -53,16 +54,16 @@
     padding: 0.5rem;
     border: none;
     border-radius: var(--border-radius);
-    background: var(--background);
+    background: var(--foreground);
     color: var(--copy);
     box-shadow: var(--box-shadow);
-    border: 1px solid var(--border);
+    border: none;
     resize: none;
     
 }
 
 .create-form-container form button {
-  width: 95%;
+  width: 50%;
   height: fit-content;
   padding: 0.5rem;
   border: none;
@@ -71,6 +72,14 @@
   color: var(--copy);
   font-weight: bold;
   box-shadow: var(--box-shadow);
-  border: 1px solid var(--border);
+  border: none;
   cursor: pointer;
+}
+
+.in-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }

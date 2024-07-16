@@ -3,12 +3,14 @@
   background: var(--background);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   height: 100vh;
   width: 100vw;
   overflow-x: hidden;
 }
+
+
 
 .App h1 {
   color: var(--copy);
@@ -80,7 +82,8 @@
 .page-header button {
   padding: 10px;
   border-radius: var(--border-radius);
-  border: 1px solid var(--border);
+  border: none;
+  box-shadow: var(--box-shadow);
   background: var(--primary);
   color: var(--primary-content);
   cursor: pointer;
@@ -128,13 +131,13 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 80px;
-  right: 25px;
+  top: 75px;
+  right: 0px;
   height: fit-content;
   width: fit-content;
   padding: 1rem;
   background: var(--background);
-  border-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   z-index: 5;
 

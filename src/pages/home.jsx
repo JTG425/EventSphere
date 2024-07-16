@@ -7,6 +7,7 @@ import "../pagestyles/home.css";
 
 function Home(props) {
   const userData = props.userData;
+  const setData = props.setData;
   const [showCreateEvent, setShowCreateEvent] = useState(false);
 
   const handleShowCreateEvent = () => {
@@ -27,7 +28,7 @@ function Home(props) {
         </motion.button>
       </div>
         <UserEvents userData={userData} />
-        {showCreateEvent && <CreateEvent userData={userData} setShowCreateEvent={handleShowCreateEvent}  />}
+        {showCreateEvent && <CreateEvent userData={userData} setShowCreateEvent={handleShowCreateEvent} setData={setData}  />}
     </div>
   );
 }
