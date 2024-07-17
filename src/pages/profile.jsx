@@ -37,6 +37,19 @@ function Profile(props) {
           exit={{ opacity: 0 }}
         >
           <h2>Friends</h2>
+          <div className="friends-list">
+            {userData.friends.map((friend, index) => (
+              <motion.div
+                className="friend"
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <p>{friend}</p>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
         <motion.div
           className="profile-info"

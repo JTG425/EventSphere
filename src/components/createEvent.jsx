@@ -42,6 +42,7 @@ function CreateEvent(props) {
     const data = {
       username: userData.username,
       newEvent: {
+        eventid: `${userData.username}-${eventname}-${eventdate}`,
         eventname: eventname,
         eventdate: eventdate,
         eventtime: eventtime,

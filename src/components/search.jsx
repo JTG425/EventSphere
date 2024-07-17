@@ -9,7 +9,9 @@ function SearchBar(props) {
   const [showResults, setShowResults] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
+  const userData = props.userData;
   const userList = props.userList;
+  const handlePosting = props.handlePosting;
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -36,6 +38,8 @@ function SearchBar(props) {
       opacity: 0,
     },
   };
+
+  
 
   useEffect(() => {
     if (searchTerm.length > 0) {
@@ -70,7 +74,7 @@ function SearchBar(props) {
               initial={{ opacity: 0 }}
               animate={showResults ? { opacity: 1 } : { opacity: 0 }}
               whileHover={{
-                fontWeight: "bold",
+                scale: 1.02,
               }}
               onClick={() => handleShowProfile(user, index)}
 
@@ -89,7 +93,9 @@ function SearchBar(props) {
       </motion.div>
         {showProfile ? (
           <FriendProfile
+            userData={userData}
             profileInfo={selectedUser}
+            handlePosting={handlePosting}
             setShowProfile={handleShowProfile}
           />
         ) : null}

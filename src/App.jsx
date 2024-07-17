@@ -9,6 +9,8 @@ import { fetchData } from "./services/dataService";
 import { fetchUserList } from "./services/dataService";
 import { postEditUser } from "./services/dataService";
 import { postNewEvent } from "./services/dataService";
+import { postFriendRequest } from "./services/dataService";
+import {decideFriendRequest} from "./services/dataService";
 
 import defaultPFP from "./assets/defaultProfile.png";
 import MenuOptions from "./components/menuOptions";
@@ -16,12 +18,16 @@ import Home from "./pages/home";
 import SearchBar from "./components/search";
 import Profile from "./pages/profile";
 import CreateAccount from "./components/createAccount";
+import Inbox from "./components/inbox";
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { DotLoader } from "react-spinners";
+import { FaRegBell } from "react-icons/fa";
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [signInOrUp, setSignInOrUp] = useState("signUp");
+  const [signInOrUp, setSignInOrUp] = useState("signIn");
   const [cognitoUser, setCognitoUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [userDataLoading, setUserDataLoading] = useState(true);
@@ -30,6 +36,7 @@ function App() {
   const [createAccount, setCreateAccount] = useState(false);
   const [page, setPage] = useState("home");
   const [userList, setUserList] = useState(null);
+  const [showInbox, setShowInbox] = useState(false);
 
 
 
@@ -48,7 +55,7 @@ function App() {
       setUserDataLoading(true);
       setIsAuthenticated(true);
       fetchData(user.username, user.sessionToken).then((data) => {
-        if (data) {
+        if (data !== false) {
           console.log("Fetched Data:", data);
           setUserData(data.userData);
           if(data.userData.newUser === "true") {
@@ -57,13 +64,14 @@ function App() {
           if(data.userData.newUser === "false") {
             setCreateAccount(false);
           }
-          console.log(data.userData);
+          setUserDataLoading(false);
+        } else {
+          // Try Again If Missed
+          handleSignIn(user);
         }
-        setUserDataLoading(false);
       });
-      fetchUserList(user.username, user.sessionToken).then((data) => {
+      fetchUserList("none", "none").then((data) => {
         setUserList(data);
-        console.log(userList);
       });
     }
   };
@@ -75,7 +83,7 @@ function App() {
       setCognitoUser(user);
       setUserDataLoading(true);
       fetchData(user.username).then((data) => {
-        if (data) {
+        if (data !== false) {
           console.log("Fetched Data:", data);
           setUserData(data.userData);
           if(data.userData.newUser === "true") {
@@ -85,11 +93,14 @@ function App() {
             setCreateAccount(false);
           }
           console.log(data.userData);
+          setUserDataLoading(false);
+          setIsAuthenticated(true);
+        } else {
+          // Try Again If Missed
+          handleSignUp(user);
         }
-        setUserDataLoading(false);
-        setIsAuthenticated(true);
       });
-      fetchUserList(user.username, user.sessionToken).then((data) => {
+      fetchUserList("none", "none").then((data) => {
         setUserList(data);
       });
     }
@@ -139,7 +150,19 @@ function App() {
         });
         break;
       case "edit-user":
-        postEditUser(data);
+        postEditUser(data).then((response) => {
+          refreshUserData();
+        });
+        break;
+      case "send-friend-request":
+        postFriendRequest(data).then((response) => {
+          refreshUserData();
+        });
+        break;
+      case "decide-friend-request":
+        decideFriendRequest(data).then((response) => {
+          refreshUserData();
+        });
         break;
       default:
         console.log("No command given");
@@ -152,14 +175,11 @@ function App() {
     fetchData(cognitoUser.username, cognitoUser.sessionToken).then((data) => {
       if (data) {
         setUserData(data.userData);
-        // setRefreshing(false);
+        console.log("Refreshed Data:", data);
       }
     });
   }
 
-  useEffect(() => {
-    console.log(userList);
-  }, [userList]);
 
   return (
     <BrowserRouter>
@@ -191,7 +211,21 @@ function App() {
                     exit={{ opacity: 0 }}
                   >
                     <span className="page-header">
-                      <SearchBar userList={userList} />
+                      <SearchBar userList={userList} userData={userData} handlePosting={handlePosting} />
+                      <div className="notification-container">
+                        <span className="notification-count">{userData.inbox === null ? 0 : userData.inbox.length}</span>
+                      <button className="notification-button" onClick={() => setShowInbox(!showInbox)}>
+                      <FaRegBell className="notification-icon" 
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "1.25rem",
+                          marginRight: "1rem",
+                        }}
+                       />
+                       </button>
+                      <Inbox userData={userData} showInbox={showInbox} handlePosting={handlePosting} />
+
+                      </div>
                       <motion.img
                         src={userData.profilepic === "" || userData === null ? defaultPFP : userData.profilepic}
                         alt="profile"
@@ -225,31 +259,31 @@ function App() {
               >
                 <div className="auth-container">
                   <div className="auth-toggle">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      animate={
-                        signInOrUp === "signUp"
-                          ? { background: "rgb(170, 243, 251)" }
-                          : { background: "transparent" }
-                      }
-                      onClick={() => setSignInOrUp("signUp")}
-                      className="sign-toggle"
-                    >
-                      Sign Up
-                    </motion.button>
-                    <motion.button
+                  <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       animate={
                         signInOrUp === "signIn"
-                          ? { background: "rgb(170, 243, 251)" }
-                          : { background: "transparent" }
+                          ? { background: "#aaf3fb" }
+                          : { background: "#fbfcfc" }
                       }
                       onClick={() => setSignInOrUp("signIn")}
                       className="sign-toggle"
                     >
                       Sign In
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      animate={
+                        signInOrUp === "signUp"
+                          ? { background: "#aaf3fb" }
+                          : { background: "#fbfcfc" }
+                      }
+                      onClick={() => setSignInOrUp("signUp")}
+                      className="sign-toggle"
+                    >
+                      Sign Up
                     </motion.button>
                   </div>
                   {signInOrUp === "signUp" ? (

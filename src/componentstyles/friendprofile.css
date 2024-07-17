@@ -42,7 +42,23 @@
     padding: 10px;
     border-radius: var(--border-radius);
     border: none;
-    background: var(--primary);
-    color: var(--primary-content);
     cursor: pointer;
+    background: rgba(219, 250, 253, 0.5);
+    color: var(--copy);
+}
+
+.close-profile {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background: none;
+    color: var(--copy);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+
 }

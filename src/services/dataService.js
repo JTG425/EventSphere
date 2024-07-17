@@ -23,7 +23,6 @@ export const fetchData = async (username, sessionToken) => {
         }
   
         const jsonResponse = await response.json();
-        console.log(jsonResponse);
         return jsonResponse;
     } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
@@ -48,7 +47,7 @@ export const fetchData = async (username, sessionToken) => {
         });
   
         if (!response.ok) {
-            throw new Error("Network response was not ok " + response.statusText);
+            return false;
         }
   
         const jsonResponse = await response.json();
@@ -56,6 +55,7 @@ export const fetchData = async (username, sessionToken) => {
         return jsonResponse;
     } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
+        return false;
     }
   }
   
@@ -141,6 +141,54 @@ export const fetchData = async (username, sessionToken) => {
 export const postDeleteEvent = async (data) => {
     const url = 'http://127.0.0.1:8000/eventsphere/delete-event/';
     console.log(data)
+    try {
+      const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache',
+          },
+          body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+  
+      const jsonResponse = await response.json();
+      console.log(jsonResponse);
+  } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+  }
+};
+
+export const postFriendRequest = async (data) => {
+    const url = 'http://127.0.0.1:8000/eventsphere/send-friend-request/';
+    try {
+      const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache',
+          },
+          body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+  
+      const jsonResponse = await response.json();
+      console.log(jsonResponse);
+  } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+  }
+};
+
+export const decideFriendRequest = async (data) => {
+    const url = 'http://127.0.0.1:8000/eventsphere/decide-friend-request/';
     try {
       const response = await fetch(url, {
           method: 'POST',
