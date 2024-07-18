@@ -8,6 +8,7 @@ import "../pagestyles/home.css";
 function Home(props) {
   const userData = props.userData;
   const setData = props.setData;
+  const setSearch = props.handleSearch;
   const [showCreateEvent, setShowCreateEvent] = useState(false);
 
   const handleShowCreateEvent = () => {

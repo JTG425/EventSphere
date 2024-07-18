@@ -9,6 +9,7 @@ import { fetchData } from "./services/dataService";
 import { postDeleteEvent } from "./services/dataService";
 import { postEditUser } from "./services/dataService";
 import { postNewEvent } from "./services/dataService";
+import { postSearchTerm } from "./services/dataService";
 import { postFriendRequest } from "./services/dataService";
 import {decideFriendRequest} from "./services/dataService";
 
@@ -134,6 +135,7 @@ function App() {
         });
         break;
       case "send-friend-request":
+        console.log("sending friend request")
         postFriendRequest(data).then((response) => {
           refreshUserData();
         });
@@ -149,6 +151,12 @@ function App() {
     }
   };
 
+  const handleSearch = (data) => {
+  postSearchTerm(data).then((response) => {
+    setUserList(response);
+  });
+};
+
   const handlePopup = (message) => {
     setMessage(message);
     setShowPopup(true);
@@ -158,7 +166,7 @@ function App() {
     }, 3000);
   }
 
-  const refreshUserData = (username, AccessToken) => {
+  const refreshUserData = () => {
     setRefreshing(true);
     fetchData(userData.username, cognitoUser.AccessToken).then((data) => {
       console.log(data)
@@ -230,6 +238,7 @@ function App() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       />
+                      <SearchBar userData={userData} setData={handlePosting} searchResults={userList} setSearch={handleSearch} />
                     </span>
                     <Routes>
                       <Route path="/" element={<Home userData={userData} setData={handlePosting} />} />

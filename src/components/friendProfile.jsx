@@ -6,7 +6,7 @@ import "../componentstyles/friendprofile.css";
 
 function FriendProfile(props) {
     const [sendRequest, setSendRequest] = useState(false);
-    const handlePosting = props.handlePosting;
+    const setData = props.setData;
     const profileInfo = props.profileInfo;
     const setShowProfile = props.setShowProfile;
     const userData = props.userData;
@@ -14,10 +14,10 @@ function FriendProfile(props) {
     const handleSendFriendRequest = () => {
         setSendRequest(true);
         const data = {
-            username: userData.username,
-            requested: profileInfo.username,
+            from: userData.username,
+            to: profileInfo.username,
         }
-        handlePosting(data,'send-friend-request');
+        setData(data, "send-friend-request");
     }
 
   return (
