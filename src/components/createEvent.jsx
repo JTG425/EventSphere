@@ -1,44 +1,42 @@
-// src/App.js
 import { useState } from "react";
 import { motion } from "framer-motion";
 import "../componentstyles/createevent.css";
 import randomGradient from 'random-gradient';
 
 function CreateEvent(props) {
-  const userData = props.userData;
-  const setShowCreateEvent = props.setShowCreateEvent;
-  const setData = props.setData;
+  const { userData, setShowCreateEvent, setData } = props;
 
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmit = (event) => {
     event.preventDefault();
-    const eventname = event.target.eventname.value;
-    const eventdate = event.target.eventdate.value;
-    const eventtime = event.target.eventtime.value;
-    const eventlocation = event.target.eventlocation.value;
-    const eventdescription = event.target.eventdescription.value;
-    let eventimage = null;
-    if (event.target.eventimage.files.length > 0) {
-      const file = event.target.eventimage.files[0];
+    const formData = new FormData(event.target);
+    const eventname = formData.get('eventname');
+    const eventdate = formData.get('eventdate');
+    const eventtime = formData.get('eventtime');
+    const eventlocation = formData.get('eventlocation');
+    const eventdescription = formData.get('eventdescription');
+    const eventimageFile = formData.get('eventimage');
+
+    if (eventimageFile && eventimageFile.size > 0) {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(eventimageFile);
       reader.onloadend = () => {
-        eventimage = reader.result;
-        submitData(eventimage);
+        const eventimage = reader.result;
+        submitData(eventname, eventdate, eventtime, eventlocation, eventdescription, eventimage);
       };
     } else {
-      const gradient = randomGradient();
-      eventimage = generateGradientImage(gradient);
-      submitData(eventimage);
+      const gradient = randomGradient(userData.username); // Pass the uid parameter
+      console.log("Generated gradient:", gradient); // Log the generated gradient
+      const colors = parseGradient(gradient);
+      if (colors.color1 && colors.color2) {
+        const eventimage = generateGradientImage(colors.color1, colors.color2);
+        submitData(eventname, eventdate, eventtime, eventlocation, eventdescription, eventimage);
+      } else {
+        console.error("Invalid gradient colors:", gradient);
+      }
     }
   };
 
-  const submitData = async (eventimage) => {
-    const eventname = document.getElementById('eventname').value;
-    const eventdate = document.getElementById('eventdate').value;
-    const eventtime = document.getElementById('eventtime').value;
-    const eventlocation = document.getElementById('eventlocation').value;
-    const eventdescription = document.getElementById('eventdescription').value;
-
+  const submitData = async (eventname, eventdate, eventtime, eventlocation, eventdescription, eventimage) => {
     const data = {
       username: userData.username,
       newEvent: {
@@ -57,17 +55,26 @@ function CreateEvent(props) {
     setShowCreateEvent();
   };
 
-  const generateGradientImage = (gradient) => {
+  const generateGradientImage = (color1, color2) => {
     const canvas = document.createElement('canvas');
     canvas.width = 500;
     canvas.height = 500;
     const ctx = canvas.getContext('2d');
     const gradientCanvas = ctx.createLinearGradient(0, 0, 500, 500);
-    gradientCanvas.addColorStop(0, gradient.color1);
-    gradientCanvas.addColorStop(1, gradient.color2);
+    gradientCanvas.addColorStop(0, color1);
+    gradientCanvas.addColorStop(1, color2);
     ctx.fillStyle = gradientCanvas;
     ctx.fillRect(0, 0, 500, 500);
     return canvas.toDataURL();
+  };
+
+  const parseGradient = (gradient) => {
+    const regex = /linear-gradient\([^)]+,\s*([^,]+),\s*([^)]+)\)/;
+    const matches = gradient.match(regex);
+    if (matches && matches.length === 3) {
+      return { color1: matches[1].trim(), color2: matches[2].trim() };
+    }
+    return {};
   };
 
   return (

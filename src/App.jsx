@@ -6,7 +6,7 @@ import { signIn } from "./services/dataService";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { fetchData } from "./services/dataService";
-import { fetchUserList } from "./services/dataService";
+import { postDeleteEvent } from "./services/dataService";
 import { postEditUser } from "./services/dataService";
 import { postNewEvent } from "./services/dataService";
 import { postFriendRequest } from "./services/dataService";
@@ -38,6 +38,8 @@ function App() {
   const [page, setPage] = useState("home");
   const [userList, setUserList] = useState(null);
   const [showInbox, setShowInbox] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSignIn = async (user) => {
     const username = user.username;
@@ -116,8 +118,14 @@ function App() {
     switch (command) {
       case "create-event":
         postNewEvent(data).then((response) => {
-          console.log(response);
+          handlePopup("Event Created");
           refreshUserData();
+        });
+        break;
+      case "delete-event":
+        postDeleteEvent(data).then((response) => {
+            handlePopup("Event Deleted");
+            refreshUserData();
         });
         break;
       case "edit-user":
@@ -141,6 +149,15 @@ function App() {
     }
   };
 
+  const handlePopup = (message) => {
+    setMessage(message);
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+      setMessage("");
+    }, 3000);
+  }
+
   const refreshUserData = (username, AccessToken) => {
     setRefreshing(true);
     fetchData(userData.username, cognitoUser.AccessToken).then((data) => {
@@ -156,6 +173,23 @@ function App() {
       }
     });
   }
+
+  const messageVariants = {
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+    hide: {
+      opacity: 0,
+      y: 100,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
 
 
   return (
@@ -203,6 +237,14 @@ function App() {
                       <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                   </motion.div>
+                  <motion.div
+                    className="message-popup"
+                    initial="hide"
+                    animate={showPopup ? "show" : "hide"}
+                    variants={messageVariants}
+                    >
+                    {message}
+                    </motion.div>
                 </>
               ) : (
                 <span className="loading-spinner">

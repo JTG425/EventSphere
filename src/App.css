@@ -182,5 +182,20 @@
   height: 100%;
 }
 
+.message-popup {
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  text-align: center;
+  background: var(--foreground);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  z-index: 5;
+}
+
 
 

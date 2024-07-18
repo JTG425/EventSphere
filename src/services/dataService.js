@@ -110,6 +110,7 @@ export const postEditUser = async (data) => {
 
 export const postNewEvent = async (data) => {
   const url = "http://127.0.0.1:8000/eventsphere/create-event/";
+  console.log(data)
   try {
     const response = await fetch(url, {
       method: "POST",

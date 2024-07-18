@@ -3,7 +3,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TiDelete } from "react-icons/ti";
 import { MdEdit } from "react-icons/md";
-import { postDeleteEvent } from "../services/dataService";
 import { IoClose } from "react-icons/io5";
 
 import "../componentstyles/events.css";
@@ -14,6 +13,7 @@ function UserEvents(props) {
   const [deletePopup, setDeletePopup] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const userData = props.userData;
+  const setData = props.setData;
   const createdEvents = userData.createdEvents || [];
   const acceptedEvents = userData.acceptedEvents || [];
   const pendingEvents = userData.pendingEvents || [];
@@ -49,9 +49,9 @@ function UserEvents(props) {
     setShowEvent(false)
     const data = {
       username: userData.username,
-      eventToDelete: event,
+      eventToDelete: event.eventid,
     }
-    postDeleteEvent(data);
+    setData(data, "delete-event");
   }
 
   const confirmationVariants = {
@@ -183,31 +183,24 @@ function UserEvents(props) {
             </motion.div>
             {createdEvents.map((event, index) => {
               return (
-                <div
+                <motion.div
                   className="event-container"
                   key={`my-event-${index}-container`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  onClick={() => handleExpandEvent(index)}
                 >
+                  {handleDateFormatter(event.eventdate)}
                   <motion.div
                     key={`my-event-${index}`}
                     className="event"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleExpandEvent(index)}
                   >
                     <img src={event.eventimage} alt="Event" />
-                    <h3>{event.eventname}</h3>
-                    <p>
-                      <b>Date:</b> {handleDateFormatter(event.eventdate)}
-                    </p>
-                    <p>
-                      <b>Time:</b> {handleTimeFormatter(event.eventtime)}
-                    </p>
-                    <p>
-                      <b>Where:</b> {event.eventlocation}
-                    </p>
-                    <p>{event.eventdescription}</p>
                   </motion.div>
-                </div>
+                  {event.eventname}
+                </motion.div>
               );
             })}
           </div>

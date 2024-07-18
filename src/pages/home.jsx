@@ -27,7 +27,7 @@ function Home(props) {
           Create Event
         </motion.button>
       </div>
-        <UserEvents userData={userData} />
+        <UserEvents userData={userData} setData={setData} />
         {showCreateEvent && <CreateEvent userData={userData} setShowCreateEvent={handleShowCreateEvent} setData={setData}  />}
     </div>
   );
