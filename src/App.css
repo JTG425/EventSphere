@@ -25,7 +25,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   text-align: center;
-  height: 275px;
+  height: 250px;
   background: var(--foreground);
   padding: 1rem;
   border-radius: var(--border-radius);
@@ -38,7 +38,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
   margin-bottom: 15px;
 }
 
@@ -46,6 +46,7 @@
   background: var(--primary);
   color: var(--primary-content);
   padding: 10px;
+  width: 100px;
   border-radius: var(--border-radius);
   cursor: pointer;
   border: 1px solid var(--border);
@@ -79,15 +80,10 @@
   z-index: 10;
 }
 
-/* .page-header button {
-  padding: 10px;
-  border-radius: var(--border-radius);
-  border: none;
-  box-shadow: var(--box-shadow);
-  background: var(--primary);
-  color: var(--primary-content);
-  cursor: pointer;
-} */
+.auth-header {
+  margin-top: 25px;
+}
+
 
 .auth-page-container {
   position: relative;
@@ -101,7 +97,7 @@
   padding: 1rem;
   z-index: 1;
   overflow: hidden;
-  padding-top: 1rem;
+  margin-top: 25px;
 }
 
 .circle {
@@ -176,6 +172,14 @@
   background: none;
   border: none;
   cursor: pointer;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 

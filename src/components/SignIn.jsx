@@ -1,9 +1,11 @@
 // src/components/SignIn.js
 import React, { useState } from 'react';
-import { signIn } from '../services/cognito';
+import { signIn } from '../services/dataService';
 import '../componentstyles/forms.css';
 import { IoEyeOffOutline } from "react-icons/io5";
 import { IoEyeOutline } from "react-icons/io5";
+import { motion } from 'framer-motion';
+
 
 
 
@@ -22,22 +24,25 @@ const SignIn = (props) => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const { setIsAuthenticated } = props;
+  const { signIn } = props;
 
   const handleSignIn = async (event) => {
     event.preventDefault();
-    try {
-      await signIn(username, password);
-      setMessage('Sign in successful!');
-        setIsAuthenticated({ username });
-        setError(null);
-    } catch (error) {
-      setMessage(`Sign in failed: ${error.message}`);
-    }
+    const user = {
+      username: username,
+      password: password,
+    };
+    signIn(user);
   };
 
   return (
     <div className='sign-form'>
+      <motion.div
+        className='sign-form-1'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, y: -100 }}
+        >
       <form onSubmit={handleSignIn}>
         <input
           type="text"
@@ -66,6 +71,7 @@ const SignIn = (props) => {
         <button className='submit-button' type="submit">Sign In</button>
       </form>
       <p>{message}</p>
+      </motion.div>
     </div>
   );
 };

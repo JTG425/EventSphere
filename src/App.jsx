@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
-import { signOut, getCurrentUser } from "./services/cognito";
+import { signIn } from "./services/dataService";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { fetchData } from "./services/dataService";
@@ -26,6 +26,7 @@ import { FaRegBell } from "react-icons/fa";
 
 
 function App() {
+  const [userExists, setUserExists] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [signInOrUp, setSignInOrUp] = useState("signIn");
   const [cognitoUser, setCognitoUser] = useState(null);
@@ -38,85 +39,55 @@ function App() {
   const [userList, setUserList] = useState(null);
   const [showInbox, setShowInbox] = useState(false);
 
+  const handleSignIn = async (user) => {
+    const username = user.username;
+    const password = user.password;
+    signIn(username, password).then((data) => {
+      if (data.success === true) {
+        setCognitoUser(data.data);
+        setIsAuthenticated(true);
+        console.log("Cognito User:", data.data);
+        handleDataFetch(user.username, data.data.AccessToken);
+      } else {
+        console.log("Sign in failed");
+      }
+    });
+  };
 
+  const handleDataFetch = (username, AccessToken) => {
+    fetchData(username, AccessToken).then((data) => {
+      console.log(data)
+      if(data.success) {
+        setUserData(data.userData);
+        setUserDataLoading(false);
+        if(data.userData.newUser === "true") {
+          setCreateAccount(true);
+        } else {
+          setCreateAccount(false);
+        }
+      }
+    });
+  };
 
   const handleSignOut = () => {
-    signOut();
     setIsAuthenticated(false);
     setUserData(null);
     setCognitoUser(null);
+    setUserDataLoading(true);
   };
 
-  const handleSignIn = (user) => {
-    setCognitoUser(user);
-    setPage("home");
-    if (user) {
-      setCognitoUser(user);
-      setUserDataLoading(true);
-      setIsAuthenticated(true);
-      fetchData(user.username, user.sessionToken).then((data) => {
-        if (data !== false) {
-          console.log("Fetched Data:", data);
-          setUserData(data.userData);
-          if(data.userData.newUser === "true") {
-            setCreateAccount(true);
-          }
-          if(data.userData.newUser === "false") {
-            setCreateAccount(false);
-          }
-          setUserDataLoading(false);
-        } else {
-          // Try Again If Missed
-          handleSignIn(user);
-        }
-      });
-      fetchUserList("none", "none").then((data) => {
-        setUserList(data);
-      });
-    }
+  const handleAccountCreated = (data) => {
+    setCreateAccount(false);
+    setUserData(data);
+    handlePosting(data, "edit-user");
   };
 
-  const handleSignUp = (user) => {
-    setCognitoUser(user);
-    setPage("home");
-    if (user) {
-      setCognitoUser(user);
-      setUserDataLoading(true);
-      fetchData(user.username).then((data) => {
-        if (data !== false) {
-          console.log("Fetched Data:", data);
-          setUserData(data.userData);
-          if(data.userData.newUser === "true") {
-            setCreateAccount(true);
-          }
-          if(data.userData.newUser === "false") {
-            setCreateAccount(false);
-          }
-          console.log(data.userData);
-          setUserDataLoading(false);
-          setIsAuthenticated(true);
-        } else {
-          // Try Again If Missed
-          handleSignUp(user);
-        }
-      });
-      fetchUserList("none", "none").then((data) => {
-        setUserList(data);
-      });
-    }
-  };
-
+  
 
   const handlePageChange = (page) => {
     setPage(page);
   };
 
-  const handleAccountCreated = (data) => {
-    setUserData(data);
-    postEditUser(data).then((response) => {
-      setCreateAccount(false);
-    });
-  };
 
   const menuVariants = {
     show: {
@@ -170,12 +141,18 @@ function App() {
     }
   };
 
-  const refreshUserData = () => {
+  const refreshUserData = (username, AccessToken) => {
     setRefreshing(true);
-    fetchData(cognitoUser.username, cognitoUser.sessionToken).then((data) => {
-      if (data) {
+    fetchData(userData.username, cognitoUser.AccessToken).then((data) => {
+      console.log(data)
+      if(data.success) {
         setUserData(data.userData);
-        console.log("Refreshed Data:", data);
+        setUserDataLoading(false);
+        if(data.userData.newUser === "true") {
+          setCreateAccount(true);
+        } else {
+          setCreateAccount(false);
+        }
       }
     });
   }
@@ -211,21 +188,6 @@ function App() {
                     exit={{ opacity: 0 }}
                   >
                     <span className="page-header">
-                      <SearchBar userList={userList} userData={userData} handlePosting={handlePosting} />
-                      <div className="notification-container">
-                        <span className="notification-count">{userData.inbox === null ? 0 : userData.inbox.length}</span>
-                      <button className="notification-button" onClick={() => setShowInbox(!showInbox)}>
-                      <FaRegBell className="notification-icon" 
-                        style={{
-                          cursor: "pointer",
-                          fontSize: "1.25rem",
-                          marginRight: "1rem",
-                        }}
-                       />
-                       </button>
-                      <Inbox userData={userData} showInbox={showInbox} handlePosting={handlePosting} />
-
-                      </div>
                       <motion.img
                         src={userData.profilepic === "" || userData === null ? defaultPFP : userData.profilepic}
                         alt="profile"
@@ -243,12 +205,16 @@ function App() {
                   </motion.div>
                 </>
               ) : (
+                <span className="loading-spinner">
                 <DotLoader color={"#00b4d8"} loading={true} size={50} />
+                </span>
               )}
             </>
           ) : (
             <>
+            <div className="auth-header">
               <h1>Event Sphere</h1>
+              </div>
               <motion.div
                 className="auth-page-container"
                 key="auth-container-key"
@@ -287,9 +253,9 @@ function App() {
                     </motion.button>
                   </div>
                   {signInOrUp === "signUp" ? (
-                    <SignUp setIsAuthenticated={handleSignUp} />
+                    <SignUp />
                   ) : (
-                    <SignIn setIsAuthenticated={handleSignIn} />
+                    <SignIn signIn={handleSignIn} />
                   )}
                 </div>
                 <div className="circle"></div>

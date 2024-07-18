@@ -23,16 +23,10 @@ function CreateAccount(props) {
 
   const handlePfp = (event) => {
     event.preventDefault();
-    // const profilepic = event.target.profilepic.value;
-    // const setProfilePic = profilepic;
-    // console.log(`Name entered: ${name}`);
-    const data = {
-      newUser: "false",
-      username: userData.username,
-      email: userData.email,
-      name: name,
-      profilepic: profilepic,
-    };
+    const data = userData;
+    data.newUser = "false";
+    data.name = name;
+    data.profilepic = profilepic;
     setDone(data);
   };
 
