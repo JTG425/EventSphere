@@ -41,6 +41,7 @@ function App() {
   const [showInbox, setShowInbox] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState("");
+  const [userInbox, setUserInbox] = useState(null);
 
   const handleSignIn = async (user) => {
     const username = user.username;
@@ -62,6 +63,7 @@ function App() {
       console.log(data)
       if(data.success) {
         setUserData(data.userData);
+        setUserInbox(data.userInbox);
         setUserDataLoading(false);
         if(data.userData.newUser === "true") {
           setCreateAccount(true);
@@ -142,6 +144,7 @@ function App() {
         break;
       case "decide-friend-request":
         decideFriendRequest(data).then((response) => {
+          console.log(response);
           refreshUserData();
         });
         break;
@@ -182,6 +185,11 @@ function App() {
     });
   }
 
+  const handleShowInbox = () => {
+    setShowInbox(!showInbox);
+  }
+
+
   const messageVariants = {
     show: {
       opacity: 1,
@@ -221,6 +229,7 @@ function App() {
                       setPage={handlePageChange}
                     />
                   </motion.div>
+                  
                   {createAccount ? <CreateAccount userData={userData} setDone={handleAccountCreated} /> : null}
                   <motion.div
                     key="home-page"
@@ -230,6 +239,14 @@ function App() {
                     exit={{ opacity: 0 }}
                   >
                     <span className="page-header">
+                    <motion.button
+                      className='inbox-button'
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleShowInbox()}
+                    >
+                      <FaRegBell />
+                    </motion.button>
                       <motion.img
                         src={userData.profilepic === "" || userData === null ? defaultPFP : userData.profilepic}
                         alt="profile"
@@ -238,8 +255,10 @@ function App() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       />
+                      
                       <SearchBar userData={userData} setData={handlePosting} searchResults={userList} setSearch={handleSearch} />
                     </span>
+                    {showInbox ? <Inbox userData={userData} userInbox={userInbox} setData={handlePosting} showInbox={showInbox} setShowInbox={handleShowInbox} /> : null}
                     <Routes>
                       <Route path="/" element={<Home userData={userData} setData={handlePosting} />} />
                       <Route path="/profile" element={<Profile userData={userData} setData={handlePosting} />} />
@@ -304,12 +323,11 @@ function App() {
                     </motion.button>
                   </div>
                   {signInOrUp === "signUp" ? (
-                    <SignUp />
+                    <SignUp signIn={handleSignIn} />
                   ) : (
                     <SignIn signIn={handleSignIn} />
                   )}
                 </div>
-                <div className="circle"></div>
               </motion.div>
             </>
           )}

@@ -21,6 +21,7 @@ const SignUp = (props) => {
   const [message, setMessage] = useState("");
   const [isVerificationStep, setIsVerificationStep] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { signIn } = props;
 
   const handleSignUp = (event) => {
     event.preventDefault(); 
@@ -35,13 +36,23 @@ const SignUp = (props) => {
     });
   }
 
+  const handleSignIn = async (event) => {
+    event.preventDefault();
+    const user = {
+      username: username,
+      password: password,
+    };
+    signIn(user);
+  };
+
   const handleVerification = (event) => {
     event.preventDefault();
     verify(username, code, email).then((response) => {
       console.log(response);
       if (response.success === true) {
         console.log(response);
-        setMessage("Verification Successful, You Can Now Sign In");
+        setMessage("Verification Successful");
+        handleSignIn(event);
       } else {
         setMessage("Verification failed, please try again");
       }
@@ -131,7 +142,7 @@ const SignUp = (props) => {
       <motion.div
         className="message-container"
         initial={{ opacity: 0 }}
-        animate={message ? { opacity: 1 } : { opacity: 0 }}
+        animate={message ? { opacity: 1, display: "flex" } : { opacity: 0, display: "none" }}
         >
         {message && <p>{message}</p>}
         </motion.div>

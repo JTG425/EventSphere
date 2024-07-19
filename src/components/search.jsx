@@ -15,8 +15,7 @@ function SearchBar(props) {
   const setData = props.setData;
 
   var searchResults = props.searchResults;
-  
-  console.log(searchResults);
+
   if (searchResults === null || searchResults === undefined) {
     searchResults = {
         "success": false,

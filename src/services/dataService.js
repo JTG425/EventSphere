@@ -1,5 +1,9 @@
+import { json } from "react-router-dom";
+
+const API_URL = "http://44.204.149.188/eventsphere/";
+
 export async function signUp(username, password, email) {
-    const response = await fetch('http://127.0.0.1:8000/eventsphere/signup/', {
+    const response = await fetch(`${API_URL}signup/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -11,7 +15,7 @@ export async function signUp(username, password, email) {
 }
 
 export async function verify(username, code, email) {
-    const response = await fetch('http://127.0.0.1:8000/eventsphere/verify/', {
+    const response = await fetch(`${API_URL}verify/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -24,7 +28,7 @@ export async function verify(username, code, email) {
 }
 
 export const signIn = async (username, password) => {
-    const response = await fetch('http://127.0.0.1:8000/eventsphere/signin/', {
+    const response = await fetch(`${API_URL}signin/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -37,17 +41,18 @@ export const signIn = async (username, password) => {
 
 
 export const fetchData = async (username, accessToken) => {
-  const url = `http://127.0.0.1:8000/eventsphere/retrieve-data/?username=${username}`;
+  const url = `${API_URL}retrieve-data/?username=${username}`;
+  console.log(url);
   try {
     const response = await fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`
-        }
-
+        } 
     });
     const jsonResponse = await response.json();
+    console.log(jsonResponse);
     return jsonResponse;
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
@@ -55,7 +60,7 @@ export const fetchData = async (username, accessToken) => {
 };
 
 export const fetchUserList = async (username, sessionToken) => {
-  const url = "http://127.0.0.1:8000/eventsphere/retrieve-users/";
+  const url = `${API_URL}/retrieve-users/`;
   const data = {
     username: username,
     sessionToken: sessionToken,
@@ -85,7 +90,7 @@ export const fetchUserList = async (username, sessionToken) => {
 };
 
 export const postEditUser = async (data) => {
-  const url = "http://127.0.0.1:8000/eventsphere/edit-user/";
+  const url = `${API_URL}edit-user/`;
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -109,7 +114,7 @@ export const postEditUser = async (data) => {
 };
 
 export const postNewEvent = async (data) => {
-  const url = "http://127.0.0.1:8000/eventsphere/create-event/";
+  const url = `${API_URL}create-event/`;
   console.log(data)
   try {
     const response = await fetch(url, {
@@ -134,7 +139,7 @@ export const postNewEvent = async (data) => {
 };
 
 export const postDeleteEvent = async (data) => {
-  const url = "http://127.0.0.1:8000/eventsphere/delete-event/";
+  const url = `${API_URL}delete-event/`;
   console.log(data);
   try {
     const response = await fetch(url, {
@@ -159,7 +164,7 @@ export const postDeleteEvent = async (data) => {
 };
 
 export const postSearchTerm = async (data) => {
-  const url = "http://127.0.0.1:8000/eventsphere/search/";
+  const url = `${API_URL}search/`;
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -183,7 +188,7 @@ export const postSearchTerm = async (data) => {
 };
 
 export const postFriendRequest = async (data) => {
-  const url = "http://127.0.0.1:8000/eventsphere/send-friend-request/";
+  const url = `${API_URL}/send-friend-request/`;
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -207,7 +212,7 @@ export const postFriendRequest = async (data) => {
 };
 
 export const decideFriendRequest = async (data) => {
-  const url = "http://127.0.0.1:8000/eventsphere/decide-friend-request/";
+  const url = `${API_URL}decide-friend-request/`;
   try {
     const response = await fetch(url, {
       method: "POST",

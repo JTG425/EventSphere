@@ -45,15 +45,6 @@ function MenuOptions(props) {
       </Link>
       <motion.button 
           className="menu-option"
-          onClick={handlePageChange("inbox")}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-      >
-        <IoMdMail />
-        <p>Inbox</p>
-      </motion.button>
-      <motion.button 
-          className="menu-option"
           onClick={props.signOut}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}

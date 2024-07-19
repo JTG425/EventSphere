@@ -1,77 +1,98 @@
 import { motion } from "framer-motion";
 import "../componentstyles/inbox.css";
-import { Link } from "react-router-dom";
-import { IoMdHome } from "react-icons/io";
-import { CgProfile } from "react-icons/cg";
-import { IoMdMail } from "react-icons/io";
-import { PiSignOut } from "react-icons/pi";
 
 function Inbox(props) {
   const userData = props.userData;
-  const handlePosting = props.handlePosting;
+  const userInbox = props.userInbox;
+  const setData = props.setData;
   const showInbox = props.showInbox;
-  console.log(userData);
+  const setShowInbox = props.setShowInbox;
+  console.log(userInbox);
 
-  const handleDecide = (response, index) => {
+  const handleDecide = (response, index, message) => {
     const data = {
-      to: userData.inbox[index].from,
-      from: userData.username,
-      response: response,
+      to: message.from,
+      from: message.to,
+      status: response,
     };
-    handlePosting(data, "decide-friend-request");
+    setData(data, "decide-friend-request");
     
   };
 
-  return (
-    <>
-      {showInbox ? (
-        <div className="inbox-container">
-          <p>Inbox</p>
-          {userData.inbox.map((message, index) => {
-            var type = message.type;
-            var from = message.from;
-            var message = "";
-            console.log(message);
-            switch (type) {
-              case "friendRequest":
-                message = `You have a friend request from ${from}`;
-                break;
-              case "eventInvite":
-                message = `You have been invited to an event by ${from}`;
-                break;
-              default:
-                message = "You have a new message";
-                break;
-            }
+  const inboxVariants = {
+    hide: {
+      y: -300,
+    },
+    show: {
+      y: 0,
+    },
+    }
 
-            return (
-              <motion.div
-                className="message-container"
-                key={index}
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <p>{message}</p>
-                <span className="message-buttons">
-                  <button
-                    className="accept-button"
-                    onClick={() => handleDecide("accepted", index)}
-                  >
-                    Accept
-                  </button>
-                  <button
-                    className="decline-button"
-                    onClick={() => handleDecide("declined", index)}
-                  >
-                    Decline
-                  </button>
-                </span>
-              </motion.div>
-            );
-          })}
-        </div>
-      ) : null}
-    </>
+  return (
+    <motion.div 
+      className="inbox-container"
+      initial="hide"
+      animate="show"
+      variants={inboxVariants}
+      >
+      <div className="inbox-header">
+        <h2>Your Messages</h2>
+      </div>
+      <div className="inbox-messages">
+        {userInbox.inbox.map((message, index) => {
+          return (
+            <div key={`inbox-message-${index}-${message.to}`} className="inbox-message">
+              {message.type === "friendRequest" ? (
+                <>
+                  <p>{message.from} Has sent you a Friend Request</p>
+                  <div className="inbox-buttons">
+                    <motion.button
+                      onClick={() => handleDecide("accepted", index, message)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      style={{
+                        backgroundColor: "rgb(170, 243, 251)",
+                        color: "rgb(7, 144, 158)"
+                      }}
+
+                      >Accept
+                      </motion.button>
+                    <motion.button 
+                      onClick={() => handleDecide("declined", index, message)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      style={{
+                        backgroundColor: "rgb(251, 170, 170)",
+                        color: "rgb(158, 7, 7)"
+                      }}
+                      >Decline
+                      </motion.button>
+                  </div>
+                </>
+
+              ) : (
+                <>
+                  <p>{message.from} Has A New Event!</p>
+                  <div className="inbox-buttons">
+                    <motion.button
+                      onClick={() => handleDecide("accepted", index)}
+                      >Accept
+                      </motion.button>
+                    <motion.button 
+                      onClick={() => handleDecide("rejected", index)}
+                      >Reject
+                      </motion.button>
+                  </div>
+                </>
+
+              )
+              }
+            </div>
+          );
+        })}
+      </div>
+
+    </motion.div>
   );
 }
 
