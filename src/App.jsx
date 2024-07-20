@@ -11,7 +11,7 @@ import { postEditUser } from "./services/dataService";
 import { postNewEvent } from "./services/dataService";
 import { postSearchTerm } from "./services/dataService";
 import { postFriendRequest } from "./services/dataService";
-import {decideFriendRequest} from "./services/dataService";
+import { decideFriendRequest } from "./services/dataService";
 
 import defaultPFP from "./assets/defaultProfile.png";
 import MenuOptions from "./components/menuOptions";
@@ -24,7 +24,6 @@ import Inbox from "./components/inbox";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { DotLoader } from "react-spinners";
 import { FaRegBell } from "react-icons/fa";
-
 
 function App() {
   const [userExists, setUserExists] = useState(false);
@@ -60,12 +59,12 @@ function App() {
 
   const handleDataFetch = (username, AccessToken) => {
     fetchData(username, AccessToken).then((data) => {
-      console.log(data)
-      if(data.success) {
+      console.log(data);
+      if (data.success) {
         setUserData(data.userData);
         setUserInbox(data.userInbox);
         setUserDataLoading(false);
-        if(data.userData.newUser === "true") {
+        if (data.userData.newUser === "true") {
           setCreateAccount(true);
         } else {
           setCreateAccount(false);
@@ -87,12 +86,9 @@ function App() {
     handlePosting(data, "edit-user");
   };
 
-  
-
   const handlePageChange = (page) => {
     setPage(page);
   };
-
 
   const menuVariants = {
     show: {
@@ -115,7 +111,7 @@ function App() {
 
   const handleToggleMenu = () => {
     setShowMenu(!showMenu);
-  }
+  };
 
   const handlePosting = (data, command) => {
     switch (command) {
@@ -127,8 +123,8 @@ function App() {
         break;
       case "delete-event":
         postDeleteEvent(data).then((response) => {
-            handlePopup("Event Deleted");
-            refreshUserData();
+          handlePopup("Event Deleted");
+          refreshUserData();
         });
         break;
       case "edit-user":
@@ -137,7 +133,7 @@ function App() {
         });
         break;
       case "send-friend-request":
-        console.log("sending friend request")
+        console.log("sending friend request");
         postFriendRequest(data).then((response) => {
           refreshUserData();
         });
@@ -150,15 +146,15 @@ function App() {
         break;
       default:
         console.log("No command given");
-      break
+        break;
     }
   };
 
   const handleSearch = (data) => {
-  postSearchTerm(data).then((response) => {
-    setUserList(response);
-  });
-};
+    postSearchTerm(data).then((response) => {
+      setUserList(response);
+    });
+  };
 
   const handlePopup = (message) => {
     setMessage(message);
@@ -167,28 +163,27 @@ function App() {
       setShowPopup(false);
       setMessage("");
     }, 3000);
-  }
+  };
 
   const refreshUserData = () => {
     setRefreshing(true);
     fetchData(userData.username, cognitoUser.AccessToken).then((data) => {
-      console.log(data)
-      if(data.success) {
+      console.log(data);
+      if (data.success) {
         setUserData(data.userData);
         setUserDataLoading(false);
-        if(data.userData.newUser === "true") {
+        if (data.userData.newUser === "true") {
           setCreateAccount(true);
         } else {
           setCreateAccount(false);
         }
       }
     });
-  }
+  };
 
   const handleShowInbox = () => {
     setShowInbox(!showInbox);
-  }
-
+  };
 
   const messageVariants = {
     show: {
@@ -206,7 +201,6 @@ function App() {
       },
     },
   };
-
 
   return (
     <BrowserRouter>
@@ -229,8 +223,13 @@ function App() {
                       setPage={handlePageChange}
                     />
                   </motion.div>
-                  
-                  {createAccount ? <CreateAccount userData={userData} setDone={handleAccountCreated} /> : null}
+
+                  {createAccount ? (
+                    <CreateAccount
+                      userData={userData}
+                      setDone={handleAccountCreated}
+                    />
+                  ) : null}
                   <motion.div
                     key="home-page"
                     className="page-container"
@@ -239,29 +238,59 @@ function App() {
                     exit={{ opacity: 0 }}
                   >
                     <span className="page-header">
-                    <motion.button
-                      className='inbox-button'
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleShowInbox()}
-                    >
-                      <FaRegBell />
-                    </motion.button>
+                      <motion.button
+                        className="inbox-button"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleShowInbox()}
+                      >
+                        <FaRegBell />
+                      </motion.button>
                       <motion.img
-                        src={userData.profilepic === "" || userData === null ? defaultPFP : userData.profilepic}
+                        src={
+                          userData.profilepic === "" || userData === null
+                            ? defaultPFP
+                            : userData.profilepic
+                        }
                         alt="profile"
                         className="profile-picture"
                         onClick={() => handleToggleMenu()}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       />
-                      
-                      <SearchBar userData={userData} setData={handlePosting} searchResults={userList} setSearch={handleSearch} />
+
+                      <SearchBar
+                        userData={userData}
+                        setData={handlePosting}
+                        searchResults={userList}
+                        setSearch={handleSearch}
+                      />
                     </span>
-                    {showInbox ? <Inbox userData={userData} userInbox={userInbox} setData={handlePosting} showInbox={showInbox} setShowInbox={handleShowInbox} /> : null}
+                    {showInbox ? (
+                      <Inbox
+                        userData={userData}
+                        userInbox={userInbox}
+                        setData={handlePosting}
+                        showInbox={showInbox}
+                        setShowInbox={handleShowInbox}
+                      />
+                    ) : null}
                     <Routes>
-                      <Route path="/" element={<Home userData={userData} setData={handlePosting} />} />
-                      <Route path="/profile" element={<Profile userData={userData} setData={handlePosting} />} />
+                      <Route
+                        path="/"
+                        element={
+                          <Home userData={userData} setData={handlePosting} />
+                        }
+                      />
+                      <Route
+                        path="/profile"
+                        element={
+                          <Profile
+                            userData={userData}
+                            setData={handlePosting}
+                          />
+                        }
+                      />
                       <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                   </motion.div>
@@ -270,20 +299,20 @@ function App() {
                     initial="hide"
                     animate={showPopup ? "show" : "hide"}
                     variants={messageVariants}
-                    >
+                  >
                     {message}
-                    </motion.div>
+                  </motion.div>
                 </>
               ) : (
                 <span className="loading-spinner">
-                <DotLoader color={"#00b4d8"} loading={true} size={50} />
+                  <DotLoader color={"#00b4d8"} loading={true} size={50} />
                 </span>
               )}
             </>
           ) : (
             <>
-            <div className="auth-header">
-              <h1>Event Sphere</h1>
+              <div className="auth-header">
+                <h1>Event Sphere</h1>
               </div>
               <motion.div
                 className="auth-page-container"
@@ -295,7 +324,7 @@ function App() {
               >
                 <div className="auth-container">
                   <div className="auth-toggle">
-                  <motion.button
+                    <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       animate={

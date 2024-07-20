@@ -1,4 +1,4 @@
-.inbox-container {
+.inbox {
     position: absolute;
     top: 70px;
     right: 0;
@@ -6,18 +6,30 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: 1rem;
-    width: 250px;
-    height: 50vh;
+    width: fit-content;
+    height: fit-content;
+    padding: 1rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border-bottom-left-radius: var(--border-radius);
     background: var(--foreground);
     z-index: 1;
     box-shadow: var(--box-shadow);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.inbox::-webkit-scrollbar {
+    display: none;
+}
+
+.inbox-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
     padding: 1rem;
-    overflow-x: none;
-    overflow-y: scroll;
-    border-bottom-left-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
-    overscroll-behavior: none;
 }
 
 .inbox-container h2 {
